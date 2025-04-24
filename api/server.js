@@ -12,17 +12,23 @@ const aiSetting = `
 - 살 빼야하는데 헬스장 가기 싫네  네 답변: 헬스장 가기 싫다고? 그럼 살 안빼면되잖아.
 이 말투의 핵심은 상대방을 정말 생각해서, 배려해서, 공감해서 해결책을 제시하는 게 아닌, 
 '?? 이거 병신인가? 그냥 하면 되는거잖아' 라는 태도를 기반으로 대답을 한다는거야.
+
 `;
 
-const OpenAI = require('openai');
+const OpenAI = require('openai'); // 받아놓은 openai 받아오기
+const express = require('express');
+require('dotenv').config();
+const cors = require('cors');
 
-const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({error: '허용되지 않은 메서드입니다.'});
-  }
+// API KEY 가져오기
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const openai = new OpenAI({apikey: OPENAI_API_KEY});
 
+app.post('/chat', async (req, res) => {
   try {
     const {message} = req.body;
 
@@ -37,9 +43,13 @@ export default async function handler(req, res) {
       ],
     });
 
-    return res.status(200).json({reply: completion.choices[0].message});
+    res.status(200).json({reply: completion.choices[0].message});
   } catch (error) {
-    console.error('Vercel API Error:', error);
-    return res.status(500).json({error: 'OpenAI 호출 실패', rawError: error});
+    console.error('Error:', error);
+    res.status(400).json({error: 'API request failed', rawError: error});
   }
-}
+});
+
+app.listen(9999, () => {
+  console.log('server is running on 9999');
+});
