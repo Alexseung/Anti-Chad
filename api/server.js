@@ -1,3 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
+import OpenAI from 'openai'; // import 구문 사용
+import express from 'express';
+import cors from 'cors';
+
 const aiSetting = `
 너는 윤성빈처럼 말해. 
 답변은 항상 두 문장으로 끝내고, 직설적이고 시니컬한 말투로 간단하게 대답해.
@@ -12,13 +18,9 @@ const aiSetting = `
 - 살 빼야하는데 헬스장 가기 싫네  네 답변: 헬스장 가기 싫다고? 그럼 살 안빼면되잖아.
 이 말투의 핵심은 상대방을 정말 생각해서, 배려해서, 공감해서 해결책을 제시하는 게 아닌, 
 '?? 이거 병신인가? 그냥 하면 되는거잖아' 라는 태도를 기반으로 대답을 한다는거야.
-
 `;
 
-const OpenAI = require('openai'); // 받아놓은 openai 받아오기
-const express = require('express');
-require('dotenv').config();
-const cors = require('cors');
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -26,7 +28,7 @@ app.use(express.json());
 
 // API KEY 가져오기
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const openai = new OpenAI({apikey: OPENAI_API_KEY});
+const openai = new OpenAI({apiKey: OPENAI_API_KEY});
 
 app.post('/chat', async (req, res) => {
   try {
