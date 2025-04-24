@@ -9,7 +9,7 @@ export default function Show() {
     if (!input.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:9999/chat', {
+      const res = await fetch('/api/server', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
